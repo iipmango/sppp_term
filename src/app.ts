@@ -31,6 +31,6 @@ app.get("/:id", async (req, res) => {
   } catch (err) {}
 });
 
-app.listen(3000, () => {
+app.listen(7000, () => {
   console.log("Server started on Port 3000");
 });
