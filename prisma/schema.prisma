@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model player_stats {
+  player_id                Int     @id
+  games_played             Int?
+  games_started            Int?
+  minutes_played           Int?
+  field_goals_made         Int?
+  field_goals_attempted    Int?
+  field_goal_pct           Float?  @db.Float
+  three_pointers_made      Int?
+  three_pointers_attempted Int?
+  three_point_pct          Float?  @db.Float
+  free_throws_made         Int?
+  free_throws_attempted    Int?
+  free_throw_pct           Float?  @db.Float
+  offensive_rebounds       Int?
+  defensive_rebounds       Int?
+  total_rebounds           Int?
+  assists                  Int?
+  steals                   Int?
+  blocks                   Int?
+  turnovers                Int?
+  fouls                    Int?
+  points                   Int?
+  players                  players @relation(fields: [player_id], references: [player_id], onUpdate: Restrict, map: "player_stats_ibfk_1")
+}
+
+model players {
+  player_id       Int           @id @default(autoincrement())
+  player_name     String        @db.VarChar(50)
+  player_position String        @db.VarChar(50)
+  team_id         Int?
+  player_number   Int?
+  api_id          Int?
+  player_stats    player_stats?
+  teams           teams?        @relation(fields: [team_id], references: [team_id], onDelete: Restrict, onUpdate: Restrict, map: "players_ibfk_1")
+
+  @@index([team_id], map: "players_ibfk_1")
+}
+
+model teams {
+  team_id           Int       @id @default(autoincrement())
+  team_name         String    @db.VarChar(50)
+  team_city         String    @db.VarChar(50)
+  team_abbreviation String    @db.VarChar(50)
+  image             Bytes?    @db.Blob
+  players           players[]
+}
